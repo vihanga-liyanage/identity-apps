@@ -17,15 +17,18 @@
   --%>
 
 <%@ include file="localize.jsp" %>
-<%@ page import="org.wso2.carbon.identity.application.authentication.endpoint.util.AuthenticationEndpointUtil" %>
+<%@ include file="init-url.jsp" %>
+<%@ page import="java.io.File" %>
 
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="icon" href="libs/themes/default/assets/images/favicon.ico" type="image/x-icon"/>
-<link href="libs/themes/default/theme.min.css" rel="stylesheet">
-
-<title><%=AuthenticationEndpointUtil.i18n(resourceBundle, "wso2.identity.server")%></title>
-
-<script src="libs/jquery_3.4.1/jquery-3.4.1.js"></script>
+<%
+    if (StringUtils.isEmpty(tenantDomain)) {
+        tenantDomain = "carbon.super";
+    }
+    String headerPath = "/extensions/" + tenantDomain + "/header.jsp";
+    File headerFile = new File(getServletContext().getRealPath(headerPath));
+    if (headerFile.exists()) {
+%>
+        <jsp:include page="<%=headerPath%>"/>
+<%  } else if (!tenantDomain.equals("carbon.super")) { %>
+        <jsp:include page="/extensions/carbon.super/header.jsp" />
+<%  }%>

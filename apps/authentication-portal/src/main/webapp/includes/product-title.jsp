@@ -17,11 +17,18 @@
 --%>
 
 <%@ include file="localize.jsp" %>
-<%@ page import="org.wso2.carbon.identity.application.authentication.endpoint.util.AuthenticationEndpointUtil" %>
+<%@ include file="init-url.jsp" %>
+<%@ page import="java.io.File" %>
 
-<div class="product-title">
-    <div class="theme-icon inline auto transparent product-logo portal-logo">
-        <img src="libs/themes/default/assets/images/logo.svg" alt="product-logo" />
-    </div>
-    <h1 class="product-title-text"><%=AuthenticationEndpointUtil.i18n(resourceBundle, "identity.server")%></h1>
-</div>
+<%
+    if (StringUtils.isEmpty(tenantDomain)) {
+        tenantDomain = "carbon.super";
+    }
+    String headerPath = "/extensions/" + tenantDomain + "/product-title.jsp";
+    File headerFile = new File(getServletContext().getRealPath(headerPath));
+    if (headerFile.exists()) {
+%>
+        <jsp:include page="<%=headerPath%>"/>
+<%  } else if (!tenantDomain.equals("carbon.super")) { %>
+        <jsp:include page="/extensions/carbon.super/product-title.jsp" />
+<%  }%>
